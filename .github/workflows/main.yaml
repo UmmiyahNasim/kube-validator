@@ -1,17 +1,21 @@
-name: run scr
-on: [pull_request, push, workflow_dispatch]
+name: kube-yaml-validator
+on:
+  pull_request:
+  push:
+  workflow_dispatch:
+
 jobs:
   scan:
-    name: gitleaks
+    name: kube-yaml-validator
     runs-on: ubuntu-latest
     steps:
-      - name: checkout repo content
+      - name: Checkout repository
         uses: actions/checkout@v2
-      - name: setup python3
-        uses: actions/setup-python@v4
+      - name: Setup Python 3
+        uses: actions/setup-python@v2
         with:
-          python-version: '3.10' 
-      - name: install dependencies
-        run: pip3 install -r requirments.txt
-      - name: execute py script
-        run:  python3 main.py example.yaml 'spec.template.spec.containers[*].ports[*].containerPort' 8080
+          python-version: '3.10'
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Execute validation script
+        run: python main.py example.yaml 'spec.template.spec.containers[*].ports[*].containerPort' 8080
