@@ -30,6 +30,7 @@ def search_yaml_files(path, key, value):
     for i in result:
         print(i,  sep = "\n")
 
+
 def search_yaml_data(data, argKey, value, cur, curKey, file):
     """
     Recursive function to search YAML data for a specific key-value pair.
@@ -43,35 +44,34 @@ def search_yaml_data(data, argKey, value, cur, curKey, file):
         file (str): File name.
     """
 
-    if value == str(data):
-        result.append(curKey.strip('.') + " " + value + " " + file )
-        return
+    try: 
+        if value == str(data):
+            result.append('key = ' + curKey.strip('.') + ", " + 'value = ' + value + ", " + file )
+            return
 
-    keyArray = argKey.split(".")
-    if cur >= len(keyArray):
-        return
+        keyArray = argKey.split(".")
+        if cur >= len(keyArray):
+            return
+        
+        key = keyArray[cur]
 
-    key = keyArray[cur]
-
-    if isinstance(data, dict) and key in data:
-        try:
-            search_yaml_data(data[key], argKey, value, cur+1, curKey + "." + key, file)
-        except KeyError as e:
-            pass
-
-    else:
-        key = key.strip(']')
-        split = key.split('[')
-        key = split[0]
-        if isinstance(data, dict) and isinstance(data[key], list):
-            if split[1] == '*':
-                for i, item in enumerate(data[key]):
-                    curKey = curKey + "." + key + "[" + str(i) + "]"
-                    search_yaml_data(item, argKey, value, cur+1, curKey, file)
-            else:
-                index = int(split[1])
-                curKey = curKey + "." + key + "[" + str(index) + "]"
-                search_yaml_data(data[key][index], argKey, value, cur+1, curKey, file )
+        if isinstance(data, dict) and key in data:
+                search_yaml_data(data[key], argKey, value, cur+1, curKey + "." + key, file)
+        else:
+                key = key.strip(']')
+                split = key.split('[')
+                key = split[0]
+                if isinstance(data, dict) and isinstance(data[key], list):
+                    if split[1] == '*':
+                        for i, item in enumerate(data[key]):
+                            curKey = curKey + "." + key + "[" + str(i) + "]"
+                            search_yaml_data(item, argKey, value, cur+1, curKey, file)
+                    else:
+                        index = int(split[1])
+                        curKey = curKey + "." + key + "[" + str(index) + "]"
+                        search_yaml_data(data[key][index], argKey, value, cur+1, curKey, file )
+    except KeyError as e:
+        pass
 
 if __name__ == "__main__":
     if len(sys.argv) < 4:
@@ -83,6 +83,3 @@ if __name__ == "__main__":
     value = sys.argv[3]
 
     search_yaml_files(path, key, value)
-
-
-
