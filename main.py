@@ -3,11 +3,19 @@ import sys
 import glob
 import yaml
 
+
 result = []
 
 def search_yaml_files(path, key, value):
+    """
+    Search YAML files for a specific key-value pair.
+    
+    Args:
+        path (str): Path to the YAML file(s) or directory.
+        key (str): Key to search for.
+        value (str): Value to match against the key.
+    """
     yaml_files = []
-
     if os.path.isfile(path):
         yaml_files.append(path)
     elif os.path.isdir(path):
@@ -17,12 +25,26 @@ def search_yaml_files(path, key, value):
         with open(file) as f:
             data = yaml.load_all(f, Loader=yaml.FullLoader)
             for root in data:
-                search_yaml_data(root, key, value, 0, "")
-    print(result)
+                search_yaml_data(root, key, value, 0, "", file)
 
-def search_yaml_data(data, argKey, value, cur, curKey):
+    for i in result:
+        print(i,  sep = "\n")
+
+def search_yaml_data(data, argKey, value, cur, curKey, file):
+    """
+    Recursive function to search YAML data for a specific key-value pair.
+    
+    Args:
+        data (dict or list): YAML data to search.
+        argKey (str): Key to search for.
+        value (str): Value to match against the key.
+        cur (int): Cursor position.
+        curKey (str): Current key path.
+        file (str): File name.
+    """
+
     if value == str(data):
-        result.append(curKey + ", " + value)
+        result.append(curKey.strip('.') + " " + value + " " + file )
         return
 
     keyArray = argKey.split(".")
@@ -33,10 +55,10 @@ def search_yaml_data(data, argKey, value, cur, curKey):
 
     if isinstance(data, dict) and key in data:
         try:
-            search_yaml_data(data[key], argKey, value, cur+1, curKey + "." + key)
+            search_yaml_data(data[key], argKey, value, cur+1, curKey + "." + key, file)
         except KeyError as e:
             pass
-            #print(str(e))
+
     else:
         key = key.strip(']')
         split = key.split('[')
@@ -44,10 +66,12 @@ def search_yaml_data(data, argKey, value, cur, curKey):
         if isinstance(data, dict) and isinstance(data[key], list):
             if split[1] == '*':
                 for i, item in enumerate(data[key]):
-                    search_yaml_data(item, argKey, value, cur+1, curKey + "." + key + "[" + str(i) + "]")
+                    curKey = curKey + "." + key + "[" + str(i) + "]"
+                    search_yaml_data(item, argKey, value, cur+1, curKey, file)
             else:
                 index = int(split[1])
-                search_yaml_data(data[key][index], argKey, value, cur+1, curKey + "." + key + "[" + str(index) + "]")
+                curKey = curKey + "." + key + "[" + str(index) + "]"
+                search_yaml_data(data[key][index], argKey, value, cur+1, curKey, file )
 
 if __name__ == "__main__":
     if len(sys.argv) < 4:
@@ -59,3 +83,6 @@ if __name__ == "__main__":
     value = sys.argv[3]
 
     search_yaml_files(path, key, value)
+
+
+
