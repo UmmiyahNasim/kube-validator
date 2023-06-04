@@ -15,15 +15,15 @@ def search_yaml_files(path, key, value):
 
     for file in yaml_files:
         with open(file) as f:
-            data = yaml.safe_load(f)
-            search_yaml_data(data, key, value, 0, "")
-            print(result)
+            data = yaml.load_all(f, Loader=yaml.FullLoader)
+            for root in data:
+                search_yaml_data(root, key, value, 0, "")
+    print(result)
 
 def search_yaml_data(data, argKey, value, cur, curKey):
     if value == str(data):
         result.append(curKey + ", " + value)
         return
-    
 
     keyArray = argKey.split(".")
     if cur >= len(keyArray):
@@ -32,7 +32,11 @@ def search_yaml_data(data, argKey, value, cur, curKey):
     key = keyArray[cur]
 
     if isinstance(data, dict) and key in data:
-        search_yaml_data(data[key], argKey, value, cur+1, curKey + "." + key)
+        try:
+            search_yaml_data(data[key], argKey, value, cur+1, curKey + "." + key)
+        except KeyError as e:
+            pass
+            #print(str(e))
     else:
         key = key.strip(']')
         split = key.split('[')
@@ -55,5 +59,3 @@ if __name__ == "__main__":
     value = sys.argv[3]
 
     search_yaml_files(path, key, value)
-
-
