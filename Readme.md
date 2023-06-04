@@ -76,7 +76,7 @@ The kube-yaml-validator can also be executed as a Docker container. This approac
 Run the Docker container, providing the necessary arguments.
 
 ```shell
-docker run -v /path/to/yaml/files:/app/yaml kube-yaml-validator <path> <key> <value>
+docker run --rm --mount type=bind,source=/path/to/file,target=/app/file.yaml kube-yaml-validator /app/file.yaml key_to_search value_to_match
 ```
 
 `/path/to/yaml/files`: The local path to the directory containing the YAML files to be validated.
