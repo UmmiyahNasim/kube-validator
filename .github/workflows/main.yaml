@@ -1,0 +1,15 @@
+name: run scr
+on: [pull_request, push, workflow_dispatch]
+jobs:
+  scan:
+    name: gitleaks
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout repo content
+        uses: actions/checkout@v2
+      - name: setup python3
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10' 
+      - name: execute py script
+        run: python3 main.py
