@@ -14,4 +14,4 @@ jobs:
       - name: install dependencies
         run: pip3 install -r requirments.txt
       - name: execute py script
-        run:  python3 main.py example.yaml spec.replicas 2
+        run:  python3 main.py example.yaml 'spec.template.spec.containers[*].ports[*].containerPort' 8080
