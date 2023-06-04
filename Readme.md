@@ -85,7 +85,7 @@ docker run -v /path/to/yaml/files:/app/yaml kube-yaml-validator <path> <key> <va
 Example:
 
 ```shell
-docker run -v /path/to/yaml/files:/app/yaml kube-yaml-validator example.yaml 'spec.template.spec.cont
+docker run --rm --mount type=bind,source=</path/to/kube-yaml/files>,target=/app/kube-yaml kube-yaml-validator kube-yaml spec.replicas 2
 ```
 
   
