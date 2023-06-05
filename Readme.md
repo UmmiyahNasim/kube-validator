@@ -17,7 +17,7 @@ Docker (if running as a Docker container
 ## Running the Script via Python
 
 ### Local Installation
-1. Clone the repository: `git clone https://github.com/UmmiyahNasim/kube-yaml-validator.git`
+1. Clone the repository: `git clone https://github.com/UmmiyahNasim/kube-validator.git`
 2. Navigate to the project directory: `cd kube-validator`
 3. Install the dependencies: `pip install -r requirements.txt`
 
@@ -69,7 +69,7 @@ key = spec.ports[0].name, value = http, kube-yaml/example.yaml
 The kube-yaml-validator can also be executed as a Docker container. This approach eliminates the need to install dependencies and ensures consistent execution across different environments.
 
 ### Docker Installation
-1. Clone the repository: `git clone https://github.com/UmmiyahNasim/kube-yaml-validator.git`
+1. Clone the repository: `git clone https://github.com/UmmiyahNasim/kube-validator.git`
 2. Navigate to the project directory: `cd kube-validator`
 3. Build the Docker image: `docker build -t kube-yaml-validator .`
 
